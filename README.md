@@ -210,15 +210,7 @@ Add screenshots here:
 
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to GitHub
-5. Create a Pull Request
 
 ---
 
@@ -228,11 +220,7 @@ This project is developed for educational and internship purposes only.
 
 ---
 
-## 👩‍💻 Author
 
-**Malluri Archana**
-
-Internship Project 2026
 
 Granth – AI Powered Community FAQ Platform
 
