@@ -1,2 +1,949 @@
 # Granth-AI-Powered-Community-FAQ-Knowledge-Management-Platform
 Granth is an AI-powered community FAQ and knowledge management platform that helps users find answers, ask questions, and share knowledge. It uses RAG-based AI search, trust-based answer validation, and gamification features like points and badges. Built with the MERN stack, it enables efficient, reliable, and collaborative knowledge sharing.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vicharanashala Internship at IIT Ropar — VINS (online) programme FAQ">
+<title>FAQ — Vicharanashala Internship</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f10;
+    --surface: #18181b;
+    --surface2: #1e1e22;
+    --border: #2a2a30;
+    --accent: #e8c547;
+    --accent2: #7eb8f7;
+    --text: #e8e8ea;
+    --text-muted: #8888a0;
+    --text-dim: #555568;
+    --bronze: #cd7f32;
+    --silver: #a8a9ad;
+    --gold: #ffd700;
+    --platinum: #b5e5f7;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,16,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  /* HERO */
+  .hero {
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232,197,71,0.06) 0%, transparent 70%);
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    border: 1px solid rgba(232,197,71,0.25);
+    border-radius: 999px;
+    padding: 0.25rem 0.85rem;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .hero-meta span { display: flex; align-items: center; gap: 0.35rem; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .controls-left { display: flex; gap: 0.5rem; }
+
+  .btn-flat {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-flat:hover { background: var(--surface2); color: var(--text); border-color: var(--text-dim); }
+
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+    flex: 1;
+    max-width: 340px;
+  }
+
+  .search-wrap svg { flex-shrink: 0; color: var(--text-dim); }
+
+  .search-wrap input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .search-wrap input::placeholder { color: var(--text-dim); }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 0;
+  }
+
+  /* SIDEBAR TOC */
+  .toc {
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 1.5rem 1rem 2rem;
+    border-right: 1px solid var(--border);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+  }
+
+  .toc ul { list-style: none; }
+
+  .toc > ul > li { margin-bottom: 0.1rem; }
+
+  .toc a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .toc a:hover { color: var(--text); background: var(--surface); border-left-color: var(--accent); }
+
+  .toc a.active { color: var(--accent); background: rgba(232,197,71,0.07); border-left-color: var(--accent); }
+
+  /* MAIN CONTENT */
+  main { padding: 2rem; }
+
+  .faq-section {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .section-header:hover { background: var(--surface2); }
+
+  .faq-section.open .section-header {
+    border-bottom-color: var(--border);
+    background: var(--surface2);
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(232,197,71,0.1);
+    border: 1px solid rgba(232,197,71,0.2);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    flex: 1;
+    color: var(--text);
+  }
+
+  .section-count {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .chevron {
+    width: 16px; height: 16px;
+    color: var(--text-dim);
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .faq-section.open .chevron { transform: rotate(180deg); }
+
+  /* ITEMS */
+  .section-items { display: none; }
+  .faq-section.open .section-items { display: block; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-q {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .faq-q:hover { background: rgba(255,255,255,0.02); }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    min-width: 2.5rem;
+  }
+
+  .q-text {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .q-icon {
+    width: 14px; height: 14px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    transition: transform 0.2s;
+  }
+
+  .faq-item.open .q-icon { transform: rotate(45deg); color: var(--accent); }
+  .faq-item.open .q-text { color: var(--accent2); }
+
+  .faq-a {
+    display: none;
+    padding: 0 1.25rem 1rem 3.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+
+  .faq-item.open .faq-a { display: block; }
+
+  .faq-a p { margin-bottom: 0.65rem; }
+  .faq-a p:last-child { margin-bottom: 0; }
+
+  .faq-a strong { color: var(--text); font-weight: 600; }
+
+  .faq-a ul, .faq-a ol {
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+  }
+
+  .faq-a li { margin-bottom: 0.3rem; }
+
+  .faq-a a { color: var(--accent2); text-decoration: none; }
+  .faq-a a:hover { text-decoration: underline; }
+
+  .faq-a code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  .faq-a pre {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    overflow-x: auto;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    margin: 0.1rem 0;
+  }
+
+  .badge-bronze { background: rgba(205,127,50,0.15); color: var(--bronze); border: 1px solid rgba(205,127,50,0.3); }
+  .badge-silver { background: rgba(168,169,173,0.15); color: var(--silver); border: 1px solid rgba(168,169,173,0.3); }
+  .badge-gold   { background: rgba(255,215,0,0.1);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }
+  .badge-plat   { background: rgba(181,229,247,0.1);  color: var(--platinum); border: 1px solid rgba(181,229,247,0.3); }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(232,197,71,0.05);
+    padding: 0.65rem 0.9rem;
+    border-radius: 0 6px 6px 0;
+    margin: 0.5rem 0;
+    font-size: 0.83rem;
+  }
+
+  .callout.warn {
+    border-left-color: #f87171;
+    background: rgba(248,113,113,0.05);
+  }
+
+  .callout.info {
+    border-left-color: var(--accent2);
+    background: rgba(126,184,247,0.05);
+  }
+
+  /* NO RESULTS */
+  #no-results {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  footer a { color: var(--text-muted); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .toc { display: none; }
+    nav { padding: 0 1rem; }
+    .hero { padding: 2.5rem 1rem 2rem; }
+    main { padding: 1rem; }
+    .controls { padding: 0.75rem 1rem; }
+    .nav-links { display: none; }
+  }
+
+  .highlight { background: rgba(232,197,71,0.25); border-radius: 2px; }
+
+  .version-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Vicharanashala</div>
+  <ul class="nav-links">
+    <li><a href="https://samagama.in/internship">Overview</a></li>
+    <li><a href="https://samagama.in/internship/faq" class="active">FAQ</a></li>
+    <li><a href="https://samagama.in/internship/voice">Voice</a></li>
+    <li><a href="https://samagama.in">samagama.in</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">📋 Documentation</div>
+  <h1>Vicharanashala Internship — FAQ</h1>
+  <p class="hero-sub">Applied AI · Open-source software engineering · IIT Ropar</p>
+  <div class="hero-meta">
+    <span>🔖 v24.3.1</span>
+    <span>📅 Last updated: 2026-06-05</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="controls-left">
+    <button class="btn-flat" onclick="expandAll()">Expand all</button>
+    <button class="btn-flat" onclick="collapseAll()">Collapse all</button>
+  </div>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search questions…" oninput="filterFAQ(this.value)">
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-title">Contents</div>
+    <ul id="toc-list"></ul>
+  </aside>
+
+  <main id="faq-main">
+    <div id="no-results">No questions match your search.</div>
+  </main>
+</div>
+
+<footer>
+  Vicharanashala Lab · Indian Institute of Technology Ropar · 2026 cycle &nbsp;·&nbsp;
+  Questions: log in at <a href="https://samagama.in">samagama.in</a> and ask Yaksha.
+</footer>
+
+<script>
+const sections = [
+  {
+    id: "s-1", num: "1", title: "About the internship",
+    items: [
+      { id:"q-1-1", num:"1.1", q:"What is the Vicharanashala internship?",
+        a:`<p>A two-month, full-time engagement at the Vicharanashala Lab, a research lab at IIT Ropar. You will work on a real open-source project under a mentor, after a short training phase tailored to where you already are. The internship is free — we do not charge, and the work is real.</p>` },
+      { id:"q-1-2", num:"1.2", q:"What is VINS?",
+        a:`<p><strong>VINS</strong> is the Vicharanashala Internship — an online programme open to anyone who clears our interview. The work is real open-source contribution under a mentor, the certificate is from the Vicharanashala Lab for Education Design at IIT Ropar, and the programme itself is free (we charge nothing). There is no stipend.</p><p>If you are seeing a yellow VINS panel on your result page, you are selected.</p>` },
+      { id:"q-1-3", num:"1.3", q:"What are the phases of VINS, and what do the badges mean?",
+        a:`<p>VINS is structured as four phases. Each one is marked by a badge — a small token of where you are in the journey.</p>
+        <ul>
+          <li><span class="badge badge-bronze">🥉 Bronze (Phase 1)</span> — a short training period at the start, planned around what you already know. If you arrive already comfortable with the basics, your mentor may skip Bronze and put you straight on to the project.</li>
+          <li><span class="badge badge-silver">🥈 Silver (Phase 2)</span> — the main work. You contribute to a real open-source project under a Vicharanashala mentor. Finishing Bronze and Silver completes your internship and earns the certificate.</li>
+          <li><span class="badge badge-gold">🥇 Gold (Phase 3)</span> — a recognition awarded during Silver if your contribution stands on its own as a meaningful feature, not just a small fix.</li>
+          <li><span class="badge badge-plat">🏆 Platinum (Phase 4)</span> — a standing invitation to come back and visit the lab — a short trip — any time during the year after your internship ends. We help with travel through a small visit stipend.</li>
+        </ul>
+        <p>Most interns finish at Bronze + Silver, and that is exactly what the certificate is for. Gold and Platinum are extras you can pick up if your work makes the case for them.</p>` },
+      { id:"q-1-4", num:"1.4", q:"Who is the internship for? Are alumni eligible?",
+        a:`<p>The internship is for <strong>currently-enrolled students</strong> at any college or university — undergraduate, postgraduate, or doctoral. The NOC requirement is the practical reflection of this: we ask for institutional consent that you can commit your time to this internship.</p>
+        <p><strong>Candidates who have already graduated and are not currently enrolled in any programme are not eligible</strong> for this cycle. If you re-enrol later (higher studies, etc.), you are very welcome to apply again in a future cycle.</p>` },
+      { id:"q-1-5", num:"1.5", q:"Is this the same as IIT Ropar's official Summer Research Internship?",
+        a:`<p>No. Summership 2026 is a VLED Lab initiative. The certificate is issued by the <strong>Vicharanashala Lab for Education Design</strong>, not centrally by the institute. IIT Ropar runs a separate institutional summer research internship through its own office. Do not represent Summership 2026 as equivalent to that programme.</p>` },
+      { id:"q-1-6", num:"1.6", q:"I have to attend my class tomorrow/today/some day — can I take leave?",
+        a:`<div class="callout warn"><strong>Leave is not permitted.</strong> If you are also attending classes or exams, you will be relieved from the internship immediately and will need to join the next batch when it starts.</div>` },
+    ]
+  },
+  {
+    id: "s-2", num: "2", title: "Timing and dates",
+    items: [
+      { id:"q-2-1", num:"2.1", q:"When can I start?",
+        a:`<p>You can start any time in 2026 — VINS is flexible on the start date — <strong>but there are two things you must hold in mind together</strong>.</p>
+        <p><strong>The hard rule:</strong> Your internship must <strong>finish by 31 December 2026.</strong> That date is non-negotiable.</p>
+        <p><strong>The strong recommendation: start as soon as possible.</strong> The earlier you join, the more of the May–July main cohort you catch — and three things make starting earlier materially better:</p>
+        <ul>
+          <li><strong>Cohort networking.</strong> The batch goes through Bronze together — peer discussions, parallel problem-solving, and lasting connections happen during this window.</li>
+          <li><strong>TA support is concentrated in May–July.</strong> TAs are full-time during this window. After this they return to their own college work.</li>
+          <li><strong>Training rolls out with the cohort</strong>, not piecemeal — you get the material with the discussion around it.</li>
+        </ul>` },
+      { id:"q-2-2", num:"2.2", q:"How long is the internship?",
+        a:`<p><strong>Two months from your chosen start date</strong>, with an optional <strong>one-month grace period</strong> if you need it. End must land on or before 31 December 2026.</p>` },
+      { id:"q-2-3", num:"2.3", q:"Can I start in July, August or later if I have exams now?",
+        a:`<p>Yes — but only if your exams genuinely make an earlier start impossible. Wait until your exams are done, then opt in and start. Do not attempt to juggle this internship with ongoing exams. Make sure your chosen start date plus 2 months (or 3 with grace) lands on or before 31 December 2026.</p>` },
+      { id:"q-2-4", num:"2.4", q:"Can I start with the cohort and take a relaxation during my exam window?",
+        a:`<p>No. This is not an arrangement we offer.</p>
+        <p>VINS is a full-attention internship — six to ten hours a day, sometimes more. Splitting that with college exams damages both sides. If your exams fall inside the cohort duration, defer your start to after your exams end.</p>
+        <div class="callout warn"><strong>A note on consequences:</strong> If we later learn that a candidate was sitting college exams during their internship period, we reserve the right to terminate the internship or withhold the certificate at any time.</div>` },
+      { id:"q-2-5", num:"2.5", q:"Can I take leave or get an exemption during the internship for an exam scheduled in June?",
+        a:`<p>The attendance rule is firm — the 55-day continuous window is a non-negotiable part of the internship, and we cannot offer an exemption for an exam during this period.</p>` },
+      { id:"q-2-6", num:"2.6", q:"Are orientation session recordings shared with interns?",
+        a:`<p>Recordings of the sessions will not be provided. However, we may provide access to an abridged version of a talk or session if we consider it important. We do not guarantee this for every session.</p>` },
+    ]
+  },
+  {
+    id: "s-3", num: "3", title: "NOC (No Objection Certificate)",
+    items: [
+      { id:"q-3-1", num:"3.1", q:"What dates do I put on the NOC?",
+        a:`<ul><li><strong>Default:</strong> your chosen start date → your start + 2 months (with up to 1 month grace), ensuring the end date is on or before 31 December 2026.</li><li>If the NOC will be signed on a specific later date, pick a start date <em>after</em> the signature date.</li></ul>` },
+      { id:"q-3-2", num:"3.2", q:"Who can sign the NOC?",
+        a:`<p>Any authorised signatory at your college: HOD, Acting HOD (during holidays), Principal, Dean, Director, or Training & Placement Officer. For dual-degree students, either institution can sign — pick whichever is easier. For IITM BS Online Degree (standalone) students, any officer from the BS office can sign.</p>` },
+      { id:"q-3-3", num:"3.3", q:"When do I submit the NOC? Is the deadline hard?",
+        a:`<p>There is no specific calendar cut-off date — but <strong>your internship cannot formally begin until your official institutional NOC has been uploaded and validated by us.</strong> So submit your signed NOC as early as possible.</p>` },
+      { id:"q-3-4", num:"3.4", q:"What format should I use? Do I need to design it myself?",
+        a:`<p>No — <strong>we provide a printable NOC format</strong>. Once your result is out and you log in to samagama.in, you will see a <strong>Download blank NOC</strong> button on your dashboard. Take a printout, get it physically signed and stamped by your authorised signatory, scan it, and upload the signed PDF.</p>` },
+      { id:"q-3-5", num:"3.5", q:"What if my college gives me an NOC in their own format?",
+        a:`<p>A college's own NOC format is acceptable, as long as all of the required entries are present:</p><ul><li>The signing authority's <strong>handwritten signature</strong></li><li>The signing authority's <strong>name, designation, official email address, and phone number</strong></li><li>Your <strong>full name</strong> and the <strong>internship period</strong> (start and end dates)</li><li>Your <strong>signature</strong></li></ul>` },
+      { id:"q-3-6", num:"3.6", q:"Does it need to be signed by hand?",
+        a:`<p>Yes. Three things are required:</p><ul><li>The authorised signatory's <strong>handwritten signature</strong></li><li>The <strong>institutional rubber stamp / seal</strong></li><li>The signatory's <strong>email address</strong> — we automatically cross-check to verify the signature is genuine</li></ul><p>Digital signatures are not accepted on the PDF path.</p>` },
+      { id:"q-3-7", num:"3.7", q:"Can my HOD email the NOC instead of uploading it?",
+        a:`<div class="callout warn"><strong>No. Your NOC must be uploaded by you, the student, from your dashboard.</strong> The email-forward option has been retired. NOCs emailed to us will not be processed. The only accepted method is to upload the signed PDF yourself from your dashboard.</div>` },
+      { id:"q-3-8", num:"3.8", q:"How do I download and upload the NOC?",
+        a:`<p>Both happen on your <strong>dashboard</strong> at samagama.in once your result is out. You will see a NOC section with two buttons:</p><ul><li><strong>Download blank NOC</strong> — saves the printable NOC format PDF.</li><li><strong>Upload signed NOC (PDF)</strong> — opens a file picker; the file must be a PDF of at most 1 MB.</li></ul>` },
+      { id:"q-3-9", num:"3.9", q:"What if my NOC is not formally verified?",
+        a:`<p>NOC verification takes time — typically anywhere between an hour and one full working day from the moment you upload. Your offer letter is issued automatically once your signed institutional NOC is uploaded and validated.</p>` },
+      { id:"q-3-10", num:"3.10", q:"My online course (Masai, NPTEL, Coursera, etc.) won't issue an NOC. What do I do?",
+        a:`<p>The internship is open only to candidates currently enrolled in a <strong>full-time degree programme</strong> at a recognised college or university. Online-only courses do not by themselves make a candidate eligible.</p><p>If you are concurrently enrolled in a full-time degree programme alongside the online course, please obtain a No Due / No Objection certificate from that college.</p>` },
+      { id:"q-3-11", num:"3.11", q:"My HOD wants written confirmation before signing my NOC. What do I show them?",
+        a:`<p>Your selection is already confirmed the moment your yellow VINS result panel appears on your samagama.in dashboard — <strong>that is the official confirmation of your selection.</strong> Show them your VINS result panel on the dashboard as evidence of selection — that is the confirmation we provide.</p>` },
+      { id:"q-3-12", num:"3.12", q:"Can Prof. Sudarshan Iyengar or a faculty member from IIT Ropar sign my NOC?",
+        a:`<p>Your NOC must be signed by an authorised signatory at the institution where you are enrolled as a student. Sudarshan Iyengar is a faculty member at IIT Ropar and cannot sign your NOC in a personal capacity.</p>` },
+    ]
+  },
+  {
+    id: "s-4", num: "4", title: "Selection, offer letter, and certificate",
+    items: [
+      { id:"q-4-1", num:"4.1", q:"How do I know I am selected?",
+        a:`<p>If you can see your yellow VINS result panel on samagama.in, you are selected. There is no separate selection step or confirmation email.</p>` },
+      { id:"q-4-2", num:"4.2", q:"How do I opt into VINS?",
+        a:`<p>Tell Yaksha in the chat: <em>"I want to take up the online internship without stipend."</em> Yaksha will confirm. Opting in <strong>is</strong> the selection — no separate confirmation email is sent at that stage.</p>` },
+      { id:"q-4-3", num:"4.3", q:"When do I get the offer letter?",
+        a:`<p>Your offer letter is issued automatically once you upload your <strong>signed institutional NOC</strong> (and have confirmed your start and end dates) and we validate it — typically within an hour to one full working day of upload.</p><div class="callout info"><strong>The offer letter lives on your dashboard at samagama.in, not in your email.</strong> When issued, a notification will appear in the Announcements section. Log in and click <strong>Download Offer Letter</strong>.</div>` },
+      { id:"q-4-4", num:"4.4", q:"Will I get a certificate?",
+        a:`<p><strong>Yes — every intern who completes the internship gets a certificate</strong> from Vicharanashala, IIT Ropar. The internship is genuinely demanding; candidates who drop out mid-way do not get a certificate. Finishing means something, because the bar is high.</p>` },
+      { id:"q-4-5", num:"4.5", q:"How do I confirm my internship dates?",
+        a:`<p>Once you have opted into VINS in the chat with Yaksha, log in to samagama.in. On the dashboard, you will see a yellow card titled <strong>"🗓️ Confirm your internship dates"</strong>. The two date pickers pre-fill with sensible defaults. If those work for you, hit "Save dates". Your end must be on or before <strong>31 December 2026</strong>.</p>` },
+      { id:"q-4-6", num:"4.6", q:"I am a minor/major in AI student, can I join? I don't need an NOC as I'm from IIT Ropar.",
+        a:`<p>Minor/Major in AI course from IIT Ropar is a certification course and there will be a different track of internship equivalent to them. Kindly write to us separately for this. For this internship programme you should be a registered student in a UG/PG programme with some university.</p>` },
+      { id:"q-4-7", num:"4.7", q:"How do I accept the offer letter?",
+        a:`<p>Acceptance happens entirely on your <strong>dashboard at samagama.in</strong>. The Offer Letter card guides you through three steps — please finish them within <strong>5 days</strong> of your offer being issued:</p><ol><li><strong>Offer letter</strong> — download, sign the Acceptance of Offer block, and upload the signed PDF.</li><li><strong>Terms & Conditions</strong> — read each section and tick the box to confirm.</li><li><strong>Honor Code</strong> — download, sign the last page, and upload the signed PDF.</li></ol>` },
+      { id:"q-4-8", num:"4.8", q:"Can I change my internship dates?",
+        a:`<p><strong>Before the offer letter is issued:</strong> yes — open the Confirm Internship Dates card on your dashboard and edit at any time.</p><p><strong>After the offer letter is issued:</strong> no. Dates are final and will not be changed.</p>` },
+      { id:"q-4-9", num:"4.9", q:"When and how do I get the Zoom link for the kickoff meeting?",
+        a:`<p>The kickoff orientation is held for the <strong>main summer cohort only</strong>. The Zoom link is delivered via email to your registered samagama.in address and through your Yaksha chat portal.</p><p>If your start date is later, there is no separate kickoff event for you.</p>` },
+      { id:"q-4-10", num:"4.10", q:"My NOC is not ready but my start date is approaching. What do I do?",
+        a:`<p>Get your signed institutional NOC uploaded as soon as you can. Your start date cannot be honoured until your official NOC is uploaded and validated by us — <strong>the internship formally begins only after the NOC is validated.</strong></p>` },
+      { id:"q-4-11", num:"4.11", q:"When does my internship actually begin? Will I receive a notification on the day?",
+        a:`<p>Your internship begins on the <strong>start date you confirmed</strong> on the dashboard — provided your official institutional NOC has been uploaded and validated. There is no separate "your internship has begun" notification on the day itself.</p><p>On the morning of your start date, log in to samagama.in. Yaksha will guide you through the Day-1 steps of the Bronze phase.</p>` },
+      { id:"q-4-12", num:"4.12", q:"Can I switch from VINS (online) to VISE (offline) after being selected?",
+        a:`<p>The two tracks are finalised at the interview stage, and we do not move candidates between them. VISE has a fixed on-campus capacity. VINS is not a consolation track — the project, the mentor, and the certificate are the same as VISE.</p>` },
+      { id:"q-4-13", num:"4.13", q:"Can I change my internship dates after the offer letter?",
+        a:`<p><strong>No.</strong> Once your offer letter has been issued, the dates you confirmed are final and will not be changed at this stage.</p>` },
+      { id:"q-4-14", num:"4.14", q:"How do I get the link for the daily Zoom standups? Are they mandatory?",
+        a:`<p>Daily Zoom standup links are posted in the <strong>Announcements</strong> section on your samagama.in dashboard. We do not send separate emails for daily standups.</p><div class="callout warn"><strong>Attending the daily standups is mandatory for all interns.</strong> This is a full-time summer internship programme, and the daily standup is the primary touchpoint. Missing standups is treated as missing work.</div>` },
+      { id:"q-4-15", num:"4.15", q:"How do I provide my Zoom ID, and why does it matter?",
+        a:`<p>On your dashboard, just before "Start the internship," you'll see a step called <strong>"Provide your Zoom ID."</strong> Enter the exact email address linked to your Zoom account. This matters because we match your live-session attendance and participation using this email.</p>` },
+      { id:"q-4-16", num:"4.16", q:"I saved the wrong Zoom ID — can I change it?",
+        a:`<p>Once saved, your Zoom ID is <strong>final and cannot be changed by you</strong>. If you are certain you entered the wrong email, log in and type <code>#escalate</code> in chat with your correct Zoom email, and our team will review and correct it for you.</p>` },
+    ]
+  },
+  {
+    id: "s-5", num: "5", title: "Work, mentorship, and projects",
+    items: [
+      { id:"q-5-1", num:"5.1", q:"What will I work on?",
+        a:`<p>A real open-source project from Vicharanashala's portfolio — assigned based on your background and the lab's current needs. Areas range across AI/ML, web development, NLP, computer vision, agriculture-tech (Annam.AI), education-tech (ViBe), and open-source infrastructure.</p>` },
+      { id:"q-5-2", num:"5.2", q:"How many hours per day?",
+        a:`<p>Plan for <strong>6 to 10 hours a day</strong>, sometimes more during the build phase. This is a full-time internship for the two-month window. Most candidates who drop out are juggling something else — VINS expects your full attention.</p>` },
+      { id:"q-5-3", num:"5.3", q:"Who is my mentor?",
+        a:`<p>You will work with the lab's research and engineering team. The exact mentor depends on the project. The model is fluid — you will get help from a senior researcher one day, a peer the next.</p>` },
+      { id:"q-5-4", num:"5.4", q:"Is there a stipend?",
+        a:`<p>No. The internship is unpaid. Stellar performers may be recognised with a discretionary stipend at the lab's option, but this is not promised or expected.</p>` },
+      { id:"q-5-5", num:"5.5", q:"Do I need my own laptop? Should I preload any software?",
+        a:`<p><strong>Yes — a personal laptop is required.</strong> We prefer that you bring a laptop running <strong>Linux or macOS</strong>. If you use Windows, please install a terminal that can SSH and run Unix-style commands — for example, <strong>Windows Subsystem for Linux (WSL)</strong> or <strong>PuTTY</strong>.</p>` },
+      { id:"q-5-6", num:"5.6", q:"I am using a different email on GitHub / Zoom / the learning platform. Is that okay?",
+        a:`<p>No. <strong>Your registered email is your sole identifier across all programme platforms.</strong> Progress tracking, mentor assignment, and certificate issuance are all tied to it. Mismatches between platforms cannot be retroactively corrected.</p>` },
+      { id:"q-5-7", num:"5.7", q:"Why has my mentor not been assigned yet, or contacted me on day 1?",
+        a:`<p>Mentors are not assigned on day 1. You will be assigned a mentor when you move on to the <strong>project phase</strong> of VINS, which comes later in the timeline. Before that, you must complete the <strong>mandatory coursework</strong> of the Bronze phase.</p>` },
+    ]
+  },
+  {
+    id: "s-6", num: "6", title: "Code of conduct — communication channels",
+    items: [
+      { id:"q-6-1", num:"6.1", q:"What are the official communication channels?",
+        a:`<p><strong>Official channels only.</strong> The <strong>Announcements section on samagama.in</strong> is how we notify you. Log in and check it regularly during working hours.</p>
+        <p><strong>To get help with a question or problem, follow this order:</strong></p>
+        <ol>
+          <li><strong>Yaksha chat</strong> on samagama.in — start here first.</li>
+          <li><strong>Discussion forum</strong> — if Yaksha cannot resolve your matter.</li>
+          <li><strong>Escalate to a human</strong> — return to Yaksha chat and use <code>#escalate</code>.</li>
+          <li><strong>Email to <code>internship@vicharanashala.ai</code></strong> — absolute last resort.</li>
+        </ol>
+        <div class="callout warn"><strong>Unofficial groups are strictly prohibited.</strong> Creating, joining, or operating any WhatsApp group, Telegram channel, Discord server, or any other peer-coordinated space involving interns is <strong>against the code of conduct</strong>. Any complaint or report of this will lead to the <strong>immediate termination</strong> of your internship.</div>` },
+    ]
+  },
+  {
+    id: "s-7", num: "7", title: "Interviews Related",
+    items: [
+      { id:"q-7-1", num:"7.1", q:"My interview is not marked as complete on the dashboard — what do I do?",
+        a:`<p>A data-sync issue sometimes occurs where the chat session closes but the interview record doesn't update to "completed." The team will check your record and manually mark it as complete if needed. You will be unblocked within 1–2 hours. If your interview continues to be marked incomplete, please write to us on <code>internship@vicharanashala.ai</code>.</p>` },
+    ]
+  },
+  {
+    id: "s-8", num: "8", title: "Certificate",
+    items: [
+      { id:"q-8-1", num:"8.1", q:"Does Vicharanashala send a grade report or evaluation to my university?",
+        a:`<p>Vicharanashala does not send formal evaluation or grade reports to universities — that process is between you and your college. The certificate issued upon completion is the document you can submit to your college or placement office for credit.</p>` },
+      { id:"q-8-2", num:"8.2", q:"Does the internship certificate specify whether it was completed online or offline?",
+        a:`<p>The certificate is the same for both tracks. It is issued by Vicharanashala, IIT Ropar, and does not specify whether you completed it online or on campus. The certificate records only that you completed the internship.</p>` },
+      { id:"q-8-3", num:"8.3", q:"Will the completion certificate be a physical hardcopy or an e-certificate?",
+        a:`<p>The completion certificate is issued as an <strong>e-certificate</strong> — you download it from your dashboard on samagama.in after completing both Bronze and Silver. We do not print and mail physical copies. The certificate is digitally signed and can be verified from our database using the number on the certificate.</p>` },
+      { id:"q-8-4", num:"8.4", q:"Is there a WhatsApp group for candidates during the internship?",
+        a:`<p>No. See <strong>§6.1</strong> for the official communication channels.</p>` },
+    ]
+  },
+  {
+    id: "s-9", num: "9", title: "Rosetta — your internship journal",
+    items: [
+      { id:"q-9-1", num:"9.1", q:"What is Rosetta?",
+        a:`<p>Rosetta is your internship journal — a 65-day document, one entry per day, every day, for the full duration of Summership 2026. You write in it daily, keep it privately, and submit it at the end of the internship as one of your completion requirements.</p>` },
+      { id:"q-9-2", num:"9.2", q:"Why does this exist? Is it just busywork?",
+        a:`<p>No. It exists for two reasons.</p><p><strong>For you:</strong> Students who reflect regularly during a programme consistently get more out of it than those who do not — not because they work harder, but because they understand what they are doing and why.</p><p><strong>For us:</strong> When you submit Rosetta at the end, it gives us qualitative insight into your experience that no survey or evaluation can capture.</p>` },
+      { id:"q-9-3", num:"9.3", q:"What is a 'thinking routine'?",
+        a:`<p>Each day in Rosetta has a thinking routine — a short framework that gives your reflection a specific shape. Examples:</p><ul><li><strong>3-2-1</strong> — 3 things you engaged with, 2 questions on your mind, 1 surprise.</li><li><strong>Muddy / Clear</strong> — what is sharp, and what is still foggy.</li><li><strong>What? So What? Now What?</strong> — separate facts from meaning from action.</li></ul><p>The routines rotate across the 65 days so the journal does not feel repetitive or mechanical.</p>` },
+      { id:"q-9-4", num:"9.4", q:"How do I get my Rosetta journal?",
+        a:`<p>Your journal will be shared with you as a Google Doc template link during orientation. Open the link, <strong>make a copy</strong> to your own Google Drive, rename it <code>Rosetta — [Your Name] — Summership 2026</code>, and that copy is yours for the full 65 days. Do not write in the shared template.</p>` },
+      { id:"q-9-5", num:"9.5", q:"How do I use it day to day?",
+        a:`<ol><li>Open your Rosetta Google Doc.</li><li>Scroll to the entry for today's day number.</li><li>Fill in the date at the top of the entry.</li><li>Read the thinking routine name and its one-line description.</li><li>Answer the three prompts in the writing boxes below.</li><li>Close it and get on with your day.</li></ol><p>It should take between 10 and 20 minutes. It is not an essay. It is not a report. It is a journal.</p>` },
+      { id:"q-9-6", num:"9.6", q:"How long should each entry be?",
+        a:`<p>There is no minimum or maximum word count. A good entry is one that is honest and specific. Three to five sentences per prompt is usually enough.</p><p>What is <strong>not</strong> acceptable: one-word answers, copy-pasted text, vague non-answers, or anything that reads like it was generated by an AI.</p>` },
+      { id:"q-9-7", num:"9.7", q:"What is the one rule?",
+        a:`<div class="callout"><strong>Write what is true.</strong> Not what sounds impressive. Not what you think we want to read. If you hated today, write that. If you are confused and frustrated, write that. We will know immediately if an entry reads like an LLM wrote it. Do not do that.</div>` },
+      { id:"q-9-8", num:"9.8", q:"Can I use ChatGPT or any AI tool to write my entries?",
+        a:`<p><strong>No.</strong> This is the one firm rule of Rosetta. The journal is a record of your thinking, not a demonstration of what an AI can produce on your behalf. Entries that read as AI-generated will not be counted toward your completion requirement.</p>` },
+      { id:"q-9-9", num:"9.9", q:"What if I miss a day?",
+        a:`<p>Fill it in as soon as you can. Write the <strong>actual date you are filling it in</strong>, not the date of the missed entry. Be honest in the entry about the fact that you are writing it late and why. A late honest entry is always better than no entry.</p>` },
+      { id:"q-9-10", num:"9.10", q:"Will anyone read my journal during the internship?",
+        a:`<p><strong>No.</strong> We will not access your journal during the 65 days. The only time we read it is after you submit it at the end of the internship. This is intentional — we want you to write freely, without feeling observed.</p>` },
+      { id:"q-9-11", num:"9.11", q:"Can the prompts change mid-internship?",
+        a:`<p>Occasionally we may update a prompt for a specific day. When this happens, we will announce it in the <strong>Announcements section on samagama.in</strong> before that day begins. Check announcements before filling any entry where a change has been announced.</p>` },
+      { id:"q-9-12", num:"9.12", q:"How do I submit Rosetta at the end?",
+        a:`<p>On or before Day 65, share your Rosetta Google Doc with the programme coordinator's email address (shared during wrap-up week). Set the sharing permission to <strong>Viewer</strong>.</p><p>Make sure: your name is in the document title, all 65 entries have been filled in, and your cover page has your name, product, and team filled in.</p>` },
+      { id:"q-9-13", num:"9.13", q:"I have a question about Rosetta that is not answered here. What do I do?",
+        a:`<p>Ask Yaksha first. If Yaksha cannot answer it, escalate to your programme coordinator. Do not sit on a question — the journal works best when you start it right.</p>` },
+      { id:"q-9-14", num:"9.14", q:"My college requires written confirmation that the internship is self-paced. What document can I share?",
+        a:`<p>This is <strong>not</strong> a self-paced internship, but a very rigorous one which is time demanding. It is not permitted for one to be part of any other activity during this period.</p>` },
+    ]
+  },
+  {
+    id: "s-10", num: "10", title: "Phase 1 — coursework, Vibe LMS, and live sessions",
+    items: [
+      { id:"q-10-1", num:"10.1", q:"I've already completed a course with you in an earlier cohort — am I exempt from repeating it?",
+        a:`<p><strong>Yes.</strong> If you completed the Vinternship, Pinternship, MERN, or AI course with us in an earlier cohort, you don't have to repeat it. Submit the exemption form and we'll exempt you from that course.</p><p>A course is treated as complete when your <strong>ViBe progress is above 95%</strong>.</p><p>Exemption form: <a href="https://forms.gle/RWt1v22yVePyZXD79" target="_blank">https://forms.gle/RWt1v22yVePyZXD79</a></p><div class="callout info">Even if you're exempted from a course, <strong>live sessions and stand-ups remain mandatory for everyone.</strong> No exceptions.</div>` },
+      { id:"q-10-2", num:"10.2", q:"How do I register for the AI Fundamentals course on Vibe?",
+        a:`<ol><li>Click the AI Fundamentals registration link posted in the Announcements section on samagama.in at Phase 1 launch.</li><li>You'll be redirected to the Vibe sign-in page. Create one using the <strong>same Gmail you used to register on Samagama</strong>.</li><li>Log in with your credentials.</li><li>After logging in, <strong>open the course registration link again</strong> in your browser — the second click after login is what enrols you.</li><li>Complete the brief registration form and submit.</li></ol>` },
+      { id:"q-10-3", num:"10.3", q:"I registered on Vibe with a different email than my Samagama email — is that OK?",
+        a:`<p>Please use the <strong>same email on both platforms</strong> so we can match your Phase 1 progress to your internship record. If your Samagama email is not Gmail, you may use any Gmail of yours for Vibe, but tell Yaksha using the tag: <code>#vibe-email your-gmail@gmail.com</code>.</p>` },
+      { id:"q-10-4", num:"10.4", q:"Are live sessions mandatory if I'm on the viva route?",
+        a:`<p><strong>Yes — live sessions are mandatory for every intern, regardless of path.</strong> Whether you're on the coursework track, exempt, or have cleared the viva and moved to Phase 2, you're expected to attend every live session.</p>` },
+      { id:"q-10-5", num:"10.5", q:"Where do I find the daily live-session schedule?",
+        a:`<p>The daily live-session schedule is posted in the <strong>Announcements section on samagama.in</strong> at least 1 hour before the session begins. That is the only channel for session notifications.</p>` },
+      { id:"q-10-6", num:"10.6", q:"Can we register and start the vibe courses before our internship date formally starts?",
+        a:`<p>You will receive the viBE course link only after your internship starts. You can register and start the viBE courses only after your internship formally starts.</p>` },
+      { id:"q-10-7", num:"10.7", q:"What are the attendance and participation rules?",
+        a:`<p>Attendance and participation are tracked <strong>strictly</strong>, measured continuously over a <strong>rolling window of the last 5 working days</strong>:</p><ul><li><strong>Live-session attendance — at least 85%</strong> of total Zoom meeting time.</li><li><strong>Live participation — at least 85%</strong> — respond to in-session polls and quizzes at least 85% of times they are run.</li><li><strong>Quizzes — attempted, and passed</strong> — every quiz must be attempted, pass percentage at least 50%.</li></ul><div class="callout warn"><strong>If any one of these three falls below its threshold, you will be excused from the current batch and moved to the next batch.</strong></div>` },
+      { id:"q-10-8", num:"10.8", q:"What are Spurti Points (SP)? Do they affect my internship?",
+        a:`<p>Spurti Points are a platform feature that tracks your engagement with the programme. They are currently in an early beta phase — not used for any decisions about your standing. See <strong>Section 11</strong> for the full SP FAQ.</p>` },
+      { id:"q-10-9", num:"10.9", q:"What are the live-session (Zoom) participation and conduct rules?",
+        a:`<p>Treat every live session as a professional classroom:</p>
+        <ul>
+          <li>Keep your <strong>video on at all times</strong> — participants with video off will be removed.</li>
+          <li>Your <strong>face must be clearly visible</strong> — well-lit and centred in frame.</li>
+          <li><strong>Do not join from a mobile phone.</strong> Use a laptop or desktop.</li>
+          <li><strong>Dress code:</strong> business casuals or neat Indian casuals.</li>
+          <li><strong>No multitasking.</strong></li>
+          <li>Display your <strong>full name</strong> — first and last. Nicknames are not acceptable.</li>
+          <li>If your internet drops and you are moved to the waiting room, <strong>you will not be re-admitted.</strong></li>
+        </ul>` },
+    ]
+  },
+  {
+    id: "s-11", num: "11", title: "Spurti Points",
+    items: [
+      { id:"q-11-1", num:"11.1", q:"What are Spurti Points?",
+        a:`<p>Spurti Points, or SP, are a points layer on the platform that reflects your overall engagement with the programme. Think of SP as an indicator of your engagement — nothing more. It is not a score that defines you or determines your future in the programme.</p>` },
+      { id:"q-11-2", num:"11.2", q:"Is SP a finished system?",
+        a:`<p>No. Spurti Points are still being actively built and refined. SP is best understood as a work in progress rather than a finalised grading or evaluation system.</p>` },
+      { id:"q-11-3", num:"11.3", q:"How much importance should I give to my SP number?",
+        a:`<p>Please do not read too much into the number. SP is an early beta feature. It is meant to give you a broad sense of your engagement, not to measure your performance or determine outcomes.</p>` },
+      { id:"q-11-4", num:"11.4", q:"Can I be terminated or excused because of low SP?",
+        a:`<p>No. The programme team will not terminate, excuse, or take any decision about any intern on the basis of Spurti Points alone.</p>` },
+      { id:"q-11-5", num:"11.5", q:"What if my SP shows as zero or even negative?",
+        a:`<p>There is genuinely no cause for concern. A zero or negative SP balance does not mean you are in trouble with the programme. Because SP is in an early beta phase, the number may not always reflect your actual effort or attendance accurately.</p>` },
+      { id:"q-11-6", num:"11.6", q:"Does a higher SP bring any benefits?",
+        a:`<p>Yes. Interns who build up higher Spurti Points may, from time to time, become eligible for small perks or recognition from the programme team. Think of a higher SP as a pleasant upside to aim for.</p>` },
+      { id:"q-11-7", num:"11.7", q:"If SP does not determine outcomes, what does?",
+        a:`<p>Your attendance and live participation are what the programme watches closely and tracks strictly. A low SP number is not a cue to ease off. See §10.7 for the exact thresholds.</p>` },
+      { id:"q-11-8", num:"11.8", q:"What are the participation requirements tracked strictly?",
+        a:`<p>Looking at your most recent five working days on a rolling basis:</p><ul><li><strong>Stay present for at least 85%</strong> of the total live Zoom session time.</li><li><strong>Respond to at least 85%</strong> of the polls and quizzes run during the sessions.</li><li><strong>Attempt every quiz and clear each with a score of at least 50%.</strong></li></ul>` },
+      { id:"q-11-9", num:"11.9", q:"What does 'rolling basis' mean?",
+        a:`<p>The programme looks at your most recent five working days at any given point in time. As each new working day passes, the oldest day drops out and the newest day is added. Your recent, consistent engagement is what counts — not a strong performance in one week followed by long absences.</p>` },
+      { id:"q-11-10", num:"11.10", q:"What happens if I fall below the required participation level?",
+        a:`<p>If any one of the three participation requirements slips below the mark across your most recent five working days, you will be moved from the current batch into a later batch. This is not a termination — it is a practical step so you can rejoin when you are able to give the programme your full attention.</p>` },
+    ]
+  },
+  {
+    id: "s-12", num: "12", title: "Yaksha Chat Related",
+    items: [
+      { id:"q-12-1", num:"12.1", q:"I'm unable to type in the chat after clicking 'Interact with Yaksha' — what should I do?",
+        a:`<p>The chat input is only active after you have clicked the <strong>"Interact with Yaksha"</strong> button. If you are still unable to type, scroll up to the top of the page — the button may be above the visible area. Click it once, and the chat field will become active.</p>` },
+    ]
+  },
+  {
+    id: "s-13", num: "13", title: "ViBe Platform",
+    items: [
+      { id:"q-13-1", num:"13.1", q:"How do I log in to ViBe?",
+        a:`<ul><li>Link: <a href="https://vibe.vicharanashala.ai/auth" target="_blank">https://vibe.vicharanashala.ai/auth</a></li><li>Sign up as a student with your registered mail ID.</li><li>Check the "Notifications" tab in the top right of the Dashboard and accept the course invite.</li></ul><div class="callout warn">⚠️ Logging in with a different email ID may result in access issues or missing course visibility.</div>` },
+      { id:"q-13-2", num:"13.2", q:"Invite accepted but shows 'No course enrolled'?",
+        a:`<p>If you see "No course enrolled":</p><ul><li>Make sure you are logged in with the correct registered email ID.</li><li>Log out and log in again once.</li><li>Use personal wifi instead of college wifi as there might be some network restrictions.</li><li>Enable Cookies in Chrome and try again.</li><li>Try changing your laptop DNS to Google DNS (8.8.8.8 / 8.8.4.4).</li></ul>` },
+      { id:"q-13-3", num:"13.3", q:"Why are videos stuck or repeating?",
+        a:`<p>This may happen due to ViBe's monitored learning system. Common reasons include:</p><ul><li>Videos must be watched fully and in sequence (no skipping).</li><li>Camera and microphone permissions must be enabled.</li><li>Poor lighting or high background noise can affect playback.</li><li>Switching tabs or staying idle may restart the video.</li></ul>` },
+      { id:"q-13-4", num:"13.4", q:"Can I use a mobile or tablet?",
+        a:`<p>No, only desktop/laptop is supported.</p>` },
+      { id:"q-13-5", num:"13.5", q:"I'm experiencing video issues (stuck, looping, skipping) on ViBe. How do I troubleshoot?",
+        a:`<ol><li>Refresh the page and check multiple times.</li><li>Inspect browser console: Right-click → Inspect → Go to Network or Console tab.</li><li>Log out and log in again.</li><li>Use a different browser.</li><li>Clear browsing data and cache, then try to re-login.</li></ol><p>If the issue persists, record the issue and contact Yaksha mentioning <code>#escalate-ViBe</code>.</p>` },
+      { id:"q-13-6", num:"13.6", q:"I've completed all videos and quizzes but my progress is still less than 100%.",
+        a:`<p>Please verify that you've completed all the course items. If not, please retry the missed contents again. In the meantime: refresh your browser, or log out, clear your browser cache, and log in again.</p>` },
+      { id:"q-13-7", num:"13.7", q:"I'm unhappy with the ViBe content or platform. Can I request an exception or bypass?",
+        a:`<p>ViBe is built and continuously improved by interns and students themselves. If a learner strongly feels the regular ViBe flow does not fairly reflect their understanding, there is a formal alternative evaluation path involving a three-hour proctored examination. This path is intentionally rigorous. The scoring rules are strict:</p><ul><li><strong>Below 60%:</strong> Not qualified — must join the next cohort and continue only through normal ViBe mode.</li><li><strong>60% to 80%:</strong> One more chance in the next scheduled exam.</li><li><strong>Above 80%:</strong> Considered to have passed.</li></ul>` },
+      { id:"q-13-8", num:"13.8", q:"Is the ViBe consent form compulsory? What if I don't want to grant camera access?",
+        a:`<p>Yes — the consent form is compulsory. The platform is designed with proctoring enabled throughout the learning process, which requires access to your webcam and microphone. If you choose not to grant camera and microphone access, you will not be able to proceed with the course.</p><div class="callout info">ViBe does not continuously record videos. Proctoring operates via real-time monitoring mechanisms during learning and assessments.</div>` },
+      { id:"q-13-11", num:"13.11", q:"What is Linear Progression on ViBe?",
+        a:`<p>Linear progression is enabled for every course on ViBe. This means each learner must watch the videos and attempt the quizzes in the exact order they appear on the left panel. You cannot click on a video or quiz that lies far ahead of your current position — each item must be completed before the next one unlocks.</p>` },
+      { id:"q-13-13", num:"13.13", q:"I am seeing a red 'Access Restricted' banner. Is this a bug?",
+        a:`<p>No, this is not a bug. The banner appears when you try to open an item before completing all the items that come before it. ViBe automatically returns you to the previous valid content — you will not lose any progress.</p>` },
+      { id:"q-13-20", num:"13.20", q:"What is the single most common avoidable mistake learners make?",
+        a:`<p>Sitting with a window directly behind you during the day. The room may feel bright to you, but your camera only sees a dark silhouette. The fix is simple: move so the window is to your side or in front of the laptop, not behind you.</p>` },
+      { id:"q-13-25", num:"13.25", q:"Is there a recommended daily learning rhythm on ViBe?",
+        a:`<ul><li>Show up daily, even if only for thirty minutes. Daily consistency beats a five-hour weekend cram.</li><li>Take breaks between clips, not during them. A clip is short — finish it first.</li><li>Treat each quiz as a gentle check-in, not a high-stakes test.</li><li>For internship programmes, aim for approximately 3.33% per day.</li></ul>` },
+    ]
+  },
+  {
+    id: "s-14", num: "14", title: "Team Formation",
+    items: [
+      { id:"q-14-1", num:"14.1", q:"Is team formation compulsory?",
+        a:`<p>Yes. All projects in Phase 2 and Phase 3 (some parts) must be completed in teams. Every participant is required to be part of a team.</p>` },
+      { id:"q-14-2", num:"14.2", q:"What is the size of a team?",
+        a:`<p>The team size is fixed at <strong>four members</strong>. This is mandatory — you cannot have fewer or more members in a team at the time of final formation.</p>` },
+      { id:"q-14-3", num:"14.3", q:"How are teams formed?",
+        a:`<ul><li><strong>Students who joined on May 15 and 16:</strong> Teams were formed through a structured activity.</li><li><strong>Students joining later:</strong> Teams will be randomly assigned by the administration.</li></ul>` },
+      { id:"q-14-7", num:"14.7", q:"What if a team member leaves or becomes ineligible during Phase 1?",
+        a:`<ul><li>The administration will attempt to assign a replacement member.</li><li>If no replacement is found, you may continue as a team of three.</li><li>You must inform the admin immediately, or the change will not be recognized.</li></ul>` },
+      { id:"q-14-8", num:"14.8", q:"Can I form a team with someone from my own college?",
+        a:`<p>No. Teams must consist of members from different institutions to encourage networking. Exception: Students from the same institution but different campuses/locations may be allowed.</p>` },
+      { id:"q-14-18", num:"14.18", q:"When do team activities begin?",
+        a:`<p>Team-based work begins in Phase 2. During Phase 1 (online coursework), you do not need to worry about team activities.</p>` },
+      { id:"q-14-22", num:"14.22", q:"Will team performance affect individual evaluation?",
+        a:`<p>Yes. While some components may be individual, team deliverables are a key part of evaluation.</p>` },
+      { id:"q-14-23", num:"14.23", q:"How will communication happen within teams?",
+        a:`<p>Teams self-organise internal coordination over LinkedIn or email only, limited to their own team members. WhatsApp is not encouraged — and creating a team WhatsApp group is prohibited under §6.1. If reported, it will lead to immediate termination of the internship.</p>` },
+    ]
+  },
+];
+
+// Build page
+const main = document.getElementById('faq-main');
+const tocList = document.getElementById('toc-list');
+
+sections.forEach(sec => {
+  // TOC
+  const li = document.createElement('li');
+  li.innerHTML = `<a href="#${sec.id}" onclick="scrollToSection('${sec.id}')">${sec.num}. ${sec.title}</a>`;
+  tocList.appendChild(li);
+
+  // Section
+  const div = document.createElement('div');
+  div.className = 'faq-section';
+  div.id = sec.id;
+
+  div.innerHTML = `
+    <div class="section-header" onclick="toggleSection(this.parentElement)">
+      <span class="section-num">${sec.num}</span>
+      <span class="section-title">${sec.title}</span>
+      <span class="section-count">${sec.items.length}q</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="section-items">
+      ${sec.items.map(item => `
+        <div class="faq-item" id="${item.id}" data-q="${item.q.toLowerCase()}" data-a="${item.a.replace(/<[^>]*>/g,'').toLowerCase()}">
+          <div class="faq-q" onclick="toggleItem(this.parentElement)">
+            <span class="q-num">${item.num}</span>
+            <span class="q-text">${item.q}</span>
+            <svg class="q-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="faq-a">${item.a}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  main.insertBefore(div, document.getElementById('no-results'));
+});
+
+function toggleSection(el) {
+  el.classList.toggle('open');
+}
+
+function toggleItem(el) {
+  el.classList.toggle('open');
+}
+
+function expandAll() {
+  document.querySelectorAll('.faq-section').forEach(s => s.classList.add('open'));
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.faq-section').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+}
+
+function filterFAQ(query) {
+  const q = query.trim().toLowerCase();
+  const noResults = document.getElementById('no-results');
+  let anyVisible = false;
+
+  document.querySelectorAll('.faq-section').forEach(sec => {
+    let secVisible = false;
+    sec.querySelectorAll('.faq-item').forEach(item => {
+      const qText = item.dataset.q || '';
+      const aText = item.dataset.a || '';
+      const match = !q || qText.includes(q) || aText.includes(q);
+      item.style.display = match ? '' : 'none';
+      if (match) { secVisible = true; anyVisible = true; }
+    });
+    sec.style.display = secVisible ? '' : 'none';
+    if (secVisible && q) sec.classList.add('open');
+  });
+
+  noResults.style.display = anyVisible ? 'none' : 'block';
+}
+
+// Highlight active TOC on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.toc a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+      });
+    }
+  });
+}, { rootMargin: '-56px 0px -60% 0px', threshold: 0 });
+
+document.querySelectorAll('.faq-section').forEach(sec => observer.observe(sec));
+</script>
+</body>
+</html>
