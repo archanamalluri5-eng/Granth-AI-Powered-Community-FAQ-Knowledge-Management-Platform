@@ -1,0 +1,2 @@
+# Granth-AI-Powered-Community-FAQ-Knowledge-Management-Platform
+Granth is an AI-powered community FAQ and knowledge management platform that helps users find answers, ask questions, and share knowledge. It uses RAG-based AI search, trust-based answer validation, and gamification features like points and badges. Built with the MERN stack, it enables efficient, reliable, and collaborative knowledge sharing.
