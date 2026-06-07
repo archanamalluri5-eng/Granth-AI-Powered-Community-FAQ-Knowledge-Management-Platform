@@ -1,50 +1,100 @@
-Granth – AI-Powered Community FAQ Platform
-📖 Overview
+# 📚 Granth - AI Powered Community FAQ Platform
 
-Granth is an AI-powered Community FAQ and Knowledge Management Platform that enables users to ask questions, discover answers, and collaborate in a trusted knowledge-sharing environment. The platform combines community contributions with AI-powered search and Retrieval-Augmented Generation (RAG) to provide accurate and context-aware responses.
+## 📖 Project Overview
 
-🚀 Features
-🔍 AI-Powered FAQ Search
-🤖 RAG-Based Intelligent Answer Generation
-👥 Community Question & Answer System
-⭐ Trust-Based Answer Validation
-🏆 Reputation Points & Badges
-📊 User Contribution Tracking
-🔐 Secure Authentication & Authorization
-📱 Responsive User Interface
-📚 Centralized Knowledge Repository
-🎯 Gamification for User Engagement
-🛠️ Technology Stack
-Frontend
-React.js
-HTML5
-CSS3
-JavaScript
-Backend
-Node.js
-Express.js
-Database
-MongoDB
-AI & NLP
-Retrieval-Augmented Generation (RAG)
-Embedding Models
-Vector Database Integration
-Tools
-Git & GitHub
-VS Code
-Postman
-🏗️ System Architecture
+Granth is an AI-powered Community FAQ and Knowledge Management Platform that enables users to ask questions, find answers, and share knowledge efficiently. The platform combines community-driven discussions with AI-powered Retrieval-Augmented Generation (RAG) to deliver accurate, relevant, and context-aware responses.
 
-User → Frontend (React) → Backend API (Node.js/Express) → MongoDB Database
+The system promotes collaborative learning through trust-based answer validation, reputation scoring, and gamification features such as badges and achievement levels.
 
-                                 ↓
+---
 
-                         AI/RAG Engine
+## 🎯 Objectives
 
-                                 ↓
+- Create a centralized FAQ repository.
+- Reduce duplicate questions and answers.
+- Improve information discovery using AI.
+- Encourage community participation.
+- Provide trustworthy and validated knowledge.
 
-                 Knowledge Base & FAQ Repository
-📂 Project Structure
+---
+
+## ✨ Features
+
+### User Features
+- User Registration & Login
+- Profile Management
+- Ask Questions
+- Search FAQs
+- Answer Questions
+- Upvote & Downvote Answers
+- Bookmark Questions
+
+### AI Features
+- RAG-Based Search
+- Intelligent Answer Generation
+- Semantic Search
+- Knowledge Retrieval
+
+### Community Features
+- Trust-Based Validation
+- Reputation Points
+- Badges & Rewards
+- Leaderboard System
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+- React.js
+- HTML5
+- CSS3
+- JavaScript
+
+### Backend
+- Node.js
+- Express.js
+
+### Database
+- MongoDB
+
+### AI Technologies
+- Retrieval-Augmented Generation (RAG)
+- Embedding Models
+- Vector Search
+
+### Development Tools
+- VS Code
+- Git
+- GitHub
+- Postman
+
+---
+
+## 🏗️ System Architecture
+
+```text
+User
+  │
+  ▼
+Frontend (React.js)
+  │
+  ▼
+Backend API (Node.js + Express.js)
+  │
+  ├── MongoDB Database
+  │
+  └── AI RAG Engine
+          │
+          ▼
+Knowledge Base
+```
+
+---
+
+## 📂 Project Structure
+
+```text
 Granth/
 │
 ├── frontend/
@@ -55,11 +105,12 @@ Granth/
 │   └── services/
 │
 ├── backend/
+│   ├── config/
 │   ├── controllers/
-│   ├── routes/
-│   ├── models/
 │   ├── middleware/
-│   └── config/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
 │
 ├── database/
 │
@@ -68,24 +119,48 @@ Granth/
 ├── README.md
 ├── package.json
 └── .env
-⚙️ Installation
-Clone Repository
+```
+
+---
+
+## ⚙️ Installation
+
+### Clone Repository
+
+```bash
 git clone https://github.com/your-username/granth.git
 cd granth
-Install Dependencies
+```
+
+### Install Dependencies
+
+```bash
 npm install
-Backend Setup
+```
+
+### Start Backend
+
+```bash
 cd backend
 npm install
 npm start
-Frontend Setup
+```
+
+### Start Frontend
+
+```bash
 cd frontend
 npm install
 npm start
-🔑 Environment Variables
+```
 
-Create a .env file:
+---
 
+## 🔑 Environment Variables
+
+Create a `.env` file in the backend folder.
+
+```env
 PORT=5000
 
 MONGO_URI=your_mongodb_connection_string
@@ -93,43 +168,73 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 
 OPENAI_API_KEY=your_api_key
-🎮 Gamification System
-Earn points for answering questions
-Gain badges for achievements
-Increase reputation through validated answers
-Unlock contributor levels
-🎯 Future Enhancements
-Multi-language Support
-Voice-based Search
-AI Chat Assistant
-Mobile Application
-Advanced Analytics Dashboard
-Real-time Notifications
-📸 Screenshots
+```
 
-Add screenshots of:
+---
 
-Home Page
-FAQ Search
-Ask Question Page
-AI Assistant
-User Dashboard
-🤝 Contributing
+## 🎮 Gamification System
 
-Contributions are welcome!
+- Earn points for answering questions.
+- Gain badges for achievements.
+- Improve reputation through validations.
+- Unlock contributor levels.
 
-Fork the repository
-Create a feature branch
-Commit changes
-Push to your branch
-Create a Pull Request
-📄 License
+---
 
-This project is developed for educational and internship purposes.
+## 🚀 Future Enhancements
 
-👩‍💻 Author
+- AI Chatbot Assistant
+- Multi-Language Support
+- Voice Search
+- Mobile Application
+- Real-Time Notifications
+- Analytics Dashboard
 
-Malluri Archana
+---
 
-Internship Project – Granth: AI-Powered Community FAQ Platform
+## 📸 Screenshots
 
+Add screenshots here:
+
+### Home Page
+![Home Page](screenshots/home.png)
+
+### FAQ Search
+![FAQ Search](screenshots/search.png)
+
+### User Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### AI Assistant
+![AI Assistant](screenshots/assistant.png)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to GitHub
+5. Create a Pull Request
+
+---
+
+## 📄 License
+
+This project is developed for educational and internship purposes only.
+
+---
+
+## 👩‍💻 Author
+
+**Malluri Archana**
+
+Internship Project 2026
+
+Granth – AI Powered Community FAQ Platform
+
+---
+⭐ If you like this project, give it a Star on GitHub.
